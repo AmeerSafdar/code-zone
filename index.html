@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - WYSIWYG Editor</title>
+   <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.6/dist/jquery.fancybox.min.css'>
+<link rel='stylesheet' href='https://codepen.io/fancyapps/pen/Kxdwjj.css'>
+  <link rel="stylesheet" href="./styleab.css">
+ <link rel="stylesheet" href="./stylebc.css">
+ <style >
+   .container {
+  width: 600px;
+  padding: 20px;
+  margin: auto;
+  background: #ddd;
+}
+.-container{
+  
+  margin-left:20%;
+}
+
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font: 300 21px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      width: 500px;
+      margin: 0 auto 15px;
+    }
+    nav {
+      display: block;
+      width: 960px;
+      margin: 100px auto;
+      text-align: center;
+    }
+    nav ul {
+      list-style: none;
+    }
+    nav li {
+      display: inline-block;
+    }
+    nav a {
+      display: inline-block;
+      background: #333;
+      color: white;
+      padding: 5px 15px;
+      border: 1px solid white;
+      text-decoration: none;
+    }
+    nav a:hover {
+      border: 1px solid red;
+      background: red;
+    }
+    nav a:active {
+      background: blue;
+    }
+    nav select {
+      display: none;
+    }
+    
+    @media (max-width: 960px) {
+      nav ul     { display: none; }
+      nav select { display: inline-block; }
+    }
+  
+  
+  
+  
+  .mySlides {display:none;}
+  /*
+
+body {
+    background: rgb(243, 244, 245);
+    height: 100%;
+    color: rgb(100, 108, 127);
+    line-height: 1.4rem;
+    font-family: Roboto, "Open Sans", sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    text-rendering: optimizeLegibility;
+}
+*/
+h1 { text-align: center; }
+
+.dropzone {
+    background: white;
+    border-radius: 5px;
+    border: 2px dashed rgb(0, 135, 247);
+    border-image: none;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+<!--File upload -->
+ <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.css'>
+ <!-- responsive menue -->
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script>
+   // DOM ready
+   $(function() {
+     
+      // Create the dropdown base
+      $("<select />").appendTo("nav");
+      
+      // Create default option "Go to..."
+      $("<option />", {
+         "selected": "selected",
+         "value"   : "",
+         "text"    : "Go to..."
+      }).appendTo("nav select");
+      
+      // Populate dropdown with menu items
+      $("nav a").each(function() {
+       var el = $(this);
+       $("<option />", {
+           "value"   : el.attr("href"),
+           "text"    : el.text()
+       }).appendTo("nav select");
+      });
+      
+     // To make dropdown actually work
+     // To make more unobtrusive: http://css-tricks.com/4064-unobtrusive-page-changer/
+      $("nav select").change(function() {
+        window.location = $(this).find("option:selected").val();
+      });
+   
+   });
+  </script>
+ </style>
+</head>
+<body class="body">
+<!-- partial:index.partial.html -->
+<div class="editor">
+  <div class="toolbar">
+    <div class="line">
+      
+      <div class="box">
+        <span class="btn icon smaller" data-action="bold" title="Bold">
+          <img src="https://image.flaticon.com/icons/svg/25/25432.svg">
+        </span>
+        <span class="btn icon smaller" data-action="italic" title="Italic">
+          <img src="https://image.flaticon.com/icons/svg/25/25392.svg">
+        </span>
+        <span class="btn icon smaller" data-action="underline" title="Underline">
+          <img src="https://image.flaticon.com/icons/svg/25/25433.svg">
+        </span>
+        <span class="btn icon smaller" data-action="strikeThrough" title="Strike through">
+          <img src="https://image.flaticon.com/icons/svg/25/25626.svg">
+        </span>
+      </div>
+      
+      <div class="box">
+        <span class="btn icon has-submenu">
+          <img src="https://image.flaticon.com/icons/svg/25/25351.svg">
+          <div class="submenu">
+            <span class="btn icon" data-action="justifyLeft" title="Justify left">
+              <img src="https://image.flaticon.com/icons/svg/25/25351.svg">  
+            </span>
+            <span class="btn icon" data-action="justifyCenter" title="Justify center">
+              <img src="https://image.flaticon.com/icons/svg/25/25440.svg">  
+            </span>
+            <span class="btn icon" data-action="justifyRight" title="Justify right">
+              <img src="https://image.flaticon.com/icons/svg/25/25288.svg">  
+            </span>
+            <span class="btn icon" data-action="formatBlock" title="Justify block">
+              <img src="https://image.flaticon.com/icons/svg/25/25181.svg">  
+            </span>
+          </div>
+        </span>
+        <span class="btn icon" data-action="insertOrderedList" title="Insert ordered list">
+          <img src="https://image.flaticon.com/icons/svg/25/25242.svg">  
+        </span>
+        <span class="btn icon" data-action="insertUnorderedList" title="Insert unordered list">
+          <img src="https://image.flaticon.com/icons/svg/25/25648.svg">  
+        </span>
+        <span class="btn icon" data-action="outdent" title="Outdent">
+          <img src="https://image.flaticon.com/icons/svg/25/25410.svg">  
+        </span>
+        <span class="btn icon" data-action="indent" title="Indent">
+          <img src="https://image.flaticon.com/icons/svg/25/25233.svg">  
+        </span>
+        
+      </div>
+      <div class="box">
+        <span class="btn icon" data-action="insertHorizontalRule" title="Insert horizontal rule">
+          <img src="https://image.flaticon.com/icons/svg/25/25232.svg">  
+        </span>
+      </div>
+      
+    </div>
+    <div class="line">
+      
+      <div class="box">
+        <span class="btn icon smaller" data-action="undo" title="Undo">
+          <img src="https://image.flaticon.com/icons/svg/25/25249.svg">
+        </span>
+        <span class="btn icon" data-action="removeFormat" title="Remove format">
+          <img src="https://image.flaticon.com/icons/svg/25/25454.svg">  
+        </span>
+      </div>
+      
+      <div class="box">
+        <span class="btn icon smaller" data-action="createLink" title="Insert Link">
+          <img src="https://image.flaticon.com/icons/svg/25/25385.svg">
+        </span>
+        <span class="btn icon smaller" data-action="unlink" title="Unlink">
+          <img src="https://image.flaticon.com/icons/svg/25/25341.svg">
+        </span>
+      </div>
+      
+      <div class="box">
+        <span class="btn icon" data-action="code" title="Show HTML-Code">
+          <img src="https://image.flaticon.com/icons/svg/25/25185.svg">
+        </span>
+      </div>
+      
+    </div>
+  </div>
+  <div class="content-area">
+    <div class="visuell-view" contenteditable>
+      <p style="text-align: center;">Welcome to my <b>WYSIWYG</b> Editor <i>(What you see is what you get)</i>!</p>
+      <p style="text-align: center;">It's only made of <u>HTML5</u>, <i><u>CSS3</u> </i>and pure <u>JavaScript</u>, <strike>no framework</strike>!</p>
+      <hr>
+      <p style="text-align: center;"><b>See for yourself! 😃</b></p>
+      <p style="text-align: center;"><b>Tutorial available <a href="https://webdeasy.de/en/program-your-own-wysiwyg-editor-in-10-minutes/?referer=cp-YoVmBx">here</a>! 😋</b></p>
+    </div>
+    <textarea class="html-view"></textarea>
+  </div>
+</div>
+
+<div class="modal">
+  <div class="modal-bg"></div>
+  <div class="modal-wrapper">
+    <div class="modal-content" id="modalCreateLink">
+      <h3>Insert Link</h3>
+      <input type="text" id="linkValue" placeholder="Link (example: https://webdeasy.de/)">
+      <div class="row">
+        <input type="checkbox" id="new-tab">
+        <label for="new-tab">Open in new Tab?</label>
+      </div>
+      <button class="done">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- 
+<footer>
+  <p>coded with ❤️ by <a href="https://webdeasy.de/?referer=cp-YoVmBx" target="_blank">WebDEasy</a></p>
+  <p>Icons made by <a href="https://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a> from <a href="https://www.flaticon.com/"                 title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/"                 title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
+</footer> -->
+<!-- partial -->
+  <script  src="./scriptab.js"></script>
+  
+
+  <div class="slideshow">
+  <img src="https://images.unsplash.com/photo-1480796927426-f609979314bd?w=500&q=50"/>
+  <img src="https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=500&q=50"/>
+  <img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=500&q=50"/>
+  <img src="https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?w=500&q=50"/>
+  <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=500&q=50"/>
+  <img src="https://images.unsplash.com/photo-1542931287-023b922fa89b?w=500&q=50"/>
+</div>
+
+<!-- <footer>
+  Don't want auto-scrolling? Try with mouse/touch gestures here:<br/>
+  <a href="https://codepen.io/knekk/pen/abNvMoy" target="_top">Parallax slideshow (inifinite scrolling)</a>
+</footer> -->
+<!-- partial -->
+  <script  src="./scriptbc.js"></script>
+
+
+
+<h2>fancybox v3.5 - Images</h2>
+
+<p>
+  Examples of displaying images individually and combining into a gallery
+</p>
+
+<hr class="my-5" />
+
+<h3>Individual images</h3>
+
+<p>
+  Add <code>data-fancybox</code> attribute to any link to enable fancyBox
+</p>
+
+<p class="imglist">
+  <a href="https://source.unsplash.com/IvfoDk30JnI/1500x1000" data-fancybox data-caption="&lt;b&gt;Single photo&lt;/b&gt;&lt;br /&gt;Caption can contain &lt;em&gt;any&lt;/em&gt; HTML elements">
+    <img src="https://source.unsplash.com/IvfoDk30JnI/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/0JYgd2QuMfw/1500x1000" data-fancybox data-caption="This image has a simple caption">
+    <img src="https://source.unsplash.com/0JYgd2QuMfw/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/xAgvgQpYsf4/1500x1000" data-fancybox>
+    <img src="https://source.unsplash.com/xAgvgQpYsf4/240x160" />
+  </a>
+</p>
+
+<h3 class="mt-5">Image gallery</h3>
+
+<p>
+  Groups are created by adding the same <code>data-fancybox</code> attribute value
+</p>
+
+<p class="imglist" style="max-width: 1000px;">
+  <a href="https://source.unsplash.com/juHayWuaaoQ/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/juHayWuaaoQ/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/eWFdaPRFjwE/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/eWFdaPRFjwE/240x160" />
+  </a>
+  
+  <a href="https://source.unsplash.com/c1JxO-uAZd0/1500x1000" data-fancybox="images">
+  </a>
+
+  <a href="https://source.unsplash.com/i2KibvLYjqk/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/i2KibvLYjqk/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/RFgO9B_OR4g/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/RFgO9B_OR4g/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/7bwQXzbF6KE/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/7bwQXzbF6KE/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/NhU0nUR7920/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/NhU0nUR7920/240x160" />
+  </a>
+  
+  <a href="https://source.unsplash.com/B2LYYV9-y0s/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/B2LYYV9-y0s/240x160" />
+  </a>
+</p>
+
+<h3 class="mt-5">Gallery with one preview image</h3>
+
+<p>
+  To show only one or a few images but have a large gallery, simply hide the rest of the links. <br />
+  Optionally, use <code>data-thumb</code> for thumbnail image.
+</p>
+
+<p>
+  <a href="https://source.unsplash.com/sGEHs-HY-Oo/1500x1000" 
+     data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumbs='{"autoStart":true}'>
+    <img src="https://source.unsplash.com/sGEHs-HY-Oo/240x160" />
+  </a>
+</p>
+
+<div style="display: none;">
+  <a href="https://source.unsplash.com/Ai2TRdvI6gM/1500x1000" data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumb="https://source.unsplash.com/Ai2TRdvI6gM/240x160"></a>
+
+  <a href="https://source.unsplash.com/Hau6K6VP5vs/1500x1000" data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumb="https://source.unsplash.com/Hau6K6VP5vs/240x160"></a>
+
+  <a href="https://source.unsplash.com/muFaKaGw0eE/1500x1000" data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumb="https://source.unsplash.com/muFaKaGw0eE/240x160"></a>
+
+  <a href="https://source.unsplash.com/eXHeq48Z-Q4/1500x1000" data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumb="https://source.unsplash.com/eXHeq48Z-Q4/240x160"></a>
+
+  <a href="https://source.unsplash.com/hBYzBU1xP6s/1500x1000" data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumb="https://source.unsplash.com/hBYzBU1xP6s/240x160"></a>
+</div>
+
+<h3 class="mt-5">Data attributes</h3>
+
+<ul>
+  <li>
+    Use <code>data-width</code> and <code>data-height</code> attributes to predefine image dimensions. 
+
+    It is recommended to use these attributes for SVG files.
+  </li>
+  <li>
+    A caption can be added using the <code>data-caption</code> attribute.
+  </li>
+  <li>
+    It is possible to use <code>data-*</code> attributes to set any option. For example, <code>data-small-btn="true"</code> would display small close button on top of the image and hide the toolbar.
+  </li>
+</ul>
+
+<a href="https://image.flaticon.com/icons/svg/51/51767.svg" 
+   data-fancybox 
+   data-width="500" data-height="500"
+   data-caption="Caption for SVG file"
+   data-small-btn="true">
+  <img width="160" height="160" src="https://image.flaticon.com/icons/svg/51/51767.svg" />
+</a>
+
+<h3 class="mt-5">Using trigger element</h3>
+
+<p>
+  Sometimes you might need to start fancyBox from different element - simply use <code>data-fancybox-trigger</code> attribute with the value of fancyBox group name.
+  This allows to avoid content duplication in the gallery. For example, show fancybox when clicking on featured image:
+</p>
+
+<p class="imglist" style="max-width: 520px;">
+  <a data-fancybox-trigger="preview" href="javascript:;">
+    <img src="https://source.unsplash.com/LuK-MuZ-yf0/510x340" />
+  </a>
+
+  <a href="https://source.unsplash.com/LuK-MuZ-yf0/1500x1000" data-fancybox="preview" data-width="1500" data-height="1000">
+    <img src="https://source.unsplash.com/LuK-MuZ-yf0/120x80" />
+  </a>
+
+  <a href="https://source.unsplash.com/Oaqk7qqNh_c/1500x1000" data-fancybox="preview" data-width="1500" data-height="1000">
+    <img src="https://source.unsplash.com/Oaqk7qqNh_c/120x80" />
+  </a>
+  
+  <a href="https://source.unsplash.com/X9GHkHbJIaU/1500x1000" data-fancybox="preview" data-width="1500" data-height="1000">
+    <img src="https://source.unsplash.com/X9GHkHbJIaU/120x80" />
+  </a>
+  
+  <a href="https://source.unsplash.com/9c_djeQTDyY/1500x1000" data-fancybox="preview" data-width="1500" data-height="1000">
+    
+  </a>
+</a>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.6/dist/jquery.fancybox.min.js'></script>
+
+
+
+
+<script>
+var slideIndex = 1;
+showDivs(slideIndex);
+
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
+
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length}
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";  
+  }
+  x[slideIndex-1].style.display = "block";  
+}
+</script>
+
+
+<!-- partial:index.partial.html -->
+ <nav> 
+  
+    <h2>This menu turns into a &lt;select> when window is less than 960px to conserve space.</h2>
+    
+    <ul> 
+      <li><a href="#" class="active">Home</a></li> 
+      <li><a href="#books">Books</a></li> 
+      <li><a href="#blog">Blog</a></li> 
+      <li><a href="#about">About Us</a></li> 
+      <li><a href="#support">Support</a></li> 
+    </ul>
+    
+  </nav>
+<div class="container">
+<h1>#1 Date Picker </h1>
+ 
+<form>
+Date:
+<input id="datepicker">
+
+</form>
+</div>
+<!-- partial -->
+<!-- partial:index.partial.html -->
+<h1>DropzoneJS File Upload</h1>
+<SECTION>
+  <DIV id="dropzone">
+    <FORM class="dropzone needsclick" id="demo-upload" action="/upload">
+  
+      <DIV class="dz-message needsclick">    
+        Drop files here or click to upload.<BR>
+        <SPAN class="note needsclick">(This is just a demo dropzone. Selected 
+        files are <STRONG>not</STRONG> actually uploaded.)</SPAN>
+      </DIV>
+    </FORM>
+  </DIV>
+</SECTION>
+
+<br/>
+<!-- hr size="3" noshade color="#F00000" --->
+
+ 
+<DIV id="preview-template" style="display: none;">
+<DIV class="dz-preview dz-file-preview">
+<DIV class="dz-image"><IMG data-dz-thumbnail=""></DIV>
+<DIV class="dz-details">
+<DIV class="dz-size"><SPAN data-dz-size=""></SPAN></DIV>
+<DIV class="dz-filename"><SPAN data-dz-name=""></SPAN></DIV></DIV>
+<DIV class="dz-progress"><SPAN class="dz-upload" 
+data-dz-uploadprogress=""></SPAN></DIV>
+<DIV class="dz-error-message"><SPAN data-dz-errormessage=""></SPAN></DIV>
+<div class="dz-success-mark">
+  <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <title>Check</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <path d="M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" id="Oval-2" stroke-opacity="0.198794158" stroke="#747474" fill-opacity="0.816519475" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    </g>
+  </svg>
+</div>
+<div class="dz-error-mark">
+  <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+      <title>error</title>
+      <desc>Created with Sketch.</desc>
+      <defs></defs>
+      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+          <g id="Check-+-Oval-2" sketch:type="MSLayerGroup" stroke="#747474" stroke-opacity="0.198794158" fill="#FFFFFF" fill-opacity="0.816519475">
+              <path d="M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" id="Oval-2" sketch:type="MSShapeGroup"></path>
+          </g>
+      </g>
+  </svg>
+</div>
+<!-- partial -->
+
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.js'></script><script  >
+    var dropzone = new Dropzone('#demo-upload', {
+  previewTemplate: document.querySelector('#preview-template').innerHTML,
+  parallelUploads: 2,
+  thumbnailHeight: 120,
+  thumbnailWidth: 120,
+  maxFilesize: 3,
+  filesizeBase: 1000,
+  thumbnail: function(file, dataUrl) {
+    if (file.previewElement) {
+      file.previewElement.classList.remove("dz-file-preview");
+      var images = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+      for (var i = 0; i < images.length; i++) {
+        var thumbnailElement = images[i];
+        thumbnailElement.alt = file.name;
+        thumbnailElement.src = dataUrl;
+      }
+      setTimeout(function() { file.previewElement.classList.add("dz-image-preview"); }, 1);
+    }
+  }
+
+});
+
+
+// Now fake the file upload, since GitHub does not handle file uploads
+// and returns a 404
+
+var minSteps = 6,
+    maxSteps = 60,
+    timeBetweenSteps = 100,
+    bytesPerStep = 100000;
+
+dropzone.uploadFiles = function(files) {
+  var self = this;
+
+  for (var i = 0; i < files.length; i++) {
+
+    var file = files[i];
+    totalSteps = Math.round(Math.min(maxSteps, Math.max(minSteps, file.size / bytesPerStep)));
+
+    for (var step = 0; step < totalSteps; step++) {
+      var duration = timeBetweenSteps * (step + 1);
+      setTimeout(function(file, totalSteps, step) {
+        return function() {
+          file.upload = {
+            progress: 100 * (step + 1) / totalSteps,
+            total: file.size,
+            bytesSent: (step + 1) * file.size / totalSteps
+          };
+
+          self.emit('uploadprogress', file, file.upload.progress, file.upload.bytesSent);
+          if (file.upload.progress == 100) {
+            file.status = Dropzone.SUCCESS;
+            self.emit("success", file, 'success', null);
+            self.emit("complete", file);
+            self.processQueue();
+            //document.getElementsByClassName("dz-success-mark").style.opacity = "1";
+          }
+        };
+      }(file, totalSteps, step), duration);
+    }
+  }
+}
+<!-- Using latest jQuery, and jQuery UI -->
+ $(function() {
+$( "#datepicker" ).datepicker();
+});
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
+
+
+
+<!-- partial:index.partial.html -->
+<h2>fancybox v3.5 - Images</h2>
+
+<p>
+  Examples of displaying images individually and combining into a gallery
+</p>
+
+<hr class="my-5" />
+
+<h3>Individual images</h3>
+
+<p>
+  Add <code>data-fancybox</code> attribute to any link to enable fancyBox
+</p>
+
+<p class="imglist">
+  <a href="https://source.unsplash.com/IvfoDk30JnI/1500x1000" data-fancybox data-caption="&lt;b&gt;Single photo&lt;/b&gt;&lt;br /&gt;Caption can contain &lt;em&gt;any&lt;/em&gt; HTML elements">
+    <img src="https://source.unsplash.com/IvfoDk30JnI/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/0JYgd2QuMfw/1500x1000" data-fancybox data-caption="This image has a simple caption">
+    <img src="https://source.unsplash.com/0JYgd2QuMfw/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/xAgvgQpYsf4/1500x1000" data-fancybox>
+    <img src="https://source.unsplash.com/xAgvgQpYsf4/240x160" />
+  </a>
+</p>
+
+<h3 class="mt-5">Image gallery</h3>
+
+<p>
+  Groups are created by adding the same <code>data-fancybox</code> attribute value
+</p>
+
+<p class="imglist" style="max-width: 1000px;">
+  <a href="https://source.unsplash.com/juHayWuaaoQ/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/juHayWuaaoQ/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/eWFdaPRFjwE/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/eWFdaPRFjwE/240x160" />
+  </a>
+  
+  <!-- <a href="https://source.unsplash.com/c1JxO-uAZd0/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/c1JxO-uAZd0/240x160" />
+  </a> -->
+
+  <a href="https://source.unsplash.com/i2KibvLYjqk/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/i2KibvLYjqk/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/RFgO9B_OR4g/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/RFgO9B_OR4g/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/7bwQXzbF6KE/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/7bwQXzbF6KE/240x160" />
+  </a>
+
+  <a href="https://source.unsplash.com/NhU0nUR7920/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/NhU0nUR7920/240x160" />
+  </a>
+  
+  <a href="https://source.unsplash.com/B2LYYV9-y0s/1500x1000" data-fancybox="images">
+    <img src="https://source.unsplash.com/B2LYYV9-y0s/240x160" />
+  </a>
+</p>
+
+<h3 class="mt-5">Gallery with one preview image</h3>
+
+<p>
+  To show only one or a few images but have a large gallery, simply hide the rest of the links. <br />
+  Optionally, use <code>data-thumb</code> for thumbnail image.
+</p>
+
+<p>
+  <a href="https://source.unsplash.com/sGEHs-HY-Oo/1500x1000" 
+     data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumbs='{"autoStart":true}'>
+    <img src="https://source.unsplash.com/sGEHs-HY-Oo/240x160" />
+  </a>
+</p>
+
+<div style="display: none;">
+  <a href="https://source.unsplash.com/Ai2TRdvI6gM/1500x1000" data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumb="https://source.unsplash.com/Ai2TRdvI6gM/240x160"></a>
+
+  <a href="https://source.unsplash.com/Hau6K6VP5vs/1500x1000" data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumb="https://source.unsplash.com/Hau6K6VP5vs/240x160"></a>
+
+  <a href="https://source.unsplash.com/muFaKaGw0eE/1500x1000" data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumb="https://source.unsplash.com/muFaKaGw0eE/240x160"></a>
+
+  <a href="https://source.unsplash.com/eXHeq48Z-Q4/1500x1000" data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumb="https://source.unsplash.com/eXHeq48Z-Q4/240x160"></a>
+
+  <a href="https://source.unsplash.com/hBYzBU1xP6s/1500x1000" data-fancybox="images-preview" 
+     data-width="1500" data-height="1000"
+     data-thumb="https://source.unsplash.com/hBYzBU1xP6s/240x160"></a>
+</div>
+
+<h3 class="mt-5">Data attributes</h3>
+
+<ul>
+  <li>
+    Use <code>data-width</code> and <code>data-height</code> attributes to predefine image dimensions. 
+
+    It is recommended to use these attributes for SVG files.
+  </li>
+  <li>
+    A caption can be added using the <code>data-caption</code> attribute.
+  </li>
+  <li>
+    It is possible to use <code>data-*</code> attributes to set any option. For example, <code>data-small-btn="true"</code> would display small close button on top of the image and hide the toolbar.
+  </li>
+</ul>
+
+<a href="https://image.flaticon.com/icons/svg/51/51767.svg" 
+   data-fancybox 
+   data-width="500" data-height="500"
+   data-caption="Caption for SVG file"
+   data-small-btn="true">
+  <img width="160" height="160" src="https://image.flaticon.com/icons/svg/51/51767.svg" />
+</a>
+
+<h3 class="mt-5">Using trigger element</h3>
+
+<p>
+  Sometimes you might need to start fancyBox from different element - simply use <code>data-fancybox-trigger</code> attribute with the value of fancyBox group name.
+  This allows to avoid content duplication in the gallery. For example, show fancybox when clicking on featured image:
+</p>
+
+<p class="imglist" style="max-width: 520px;">
+  <a data-fancybox-trigger="preview" href="javascript:;">
+    <img src="https://source.unsplash.com/LuK-MuZ-yf0/510x340" />
+  </a>
+
+  <a href="https://source.unsplash.com/LuK-MuZ-yf0/1500x1000" data-fancybox="preview" data-width="1500" data-height="1000">
+    <img src="https://source.unsplash.com/LuK-MuZ-yf0/120x80" />
+  </a>
+
+  <a href="https://source.unsplash.com/Oaqk7qqNh_c/1500x1000" data-fancybox="preview" data-width="1500" data-height="1000">
+    <img src="https://source.unsplash.com/Oaqk7qqNh_c/120x80" />
+  </a>
+  
+  <a href="https://source.unsplash.com/X9GHkHbJIaU/1500x1000" data-fancybox="preview" data-width="1500" data-height="1000">
+    <img src="https://source.unsplash.com/X9GHkHbJIaU/120x80" />
+  </a>
+  
+  <!-- <a href="https://source.unsplash.com/9c_djeQTDyY/1500x1000" data-fancybox="preview" data-width="1500" data-height="1000">
+    <img src="https://source.unsplash.com/9c_djeQTDyY/120x80" /> -->
+  </a>
+</a>
+<!-- partial -->
+
+<p><Task2></Task2></p>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script>
+   // DOM ready
+   $(function() {
+     
+      // Create the dropdown base
+      $("<select />").appendTo("nav");
+      
+      // Create default option "Go to..."
+      $("<option />", {
+         "selected": "selected",
+         "value"   : "",
+         "text"    : "Go to..."
+      }).appendTo("nav select");
+      
+      // Populate dropdown with menu items
+      $("nav a").each(function() {
+       var el = $(this);
+       $("<option />", {
+           "value"   : el.attr("href"),
+           "text"    : el.text()
+       }).appendTo("nav select");
+      });
+      
+     // To make dropdown actually work
+     // To make more unobtrusive: http://css-tricks.com/4064-unobtrusive-page-changer/
+      $("nav select").change(function() {
+        window.location = $(this).find("option:selected").val();
+      });
+   
+   });
+  </script>
+ <!-- responsive menue ends -->
+  <nav> 
+  
+    <h2>This menu turns into a &lt;select> when window is less than 960px to conserve space.</h2>
+    
+    <ul> 
+      <li><a href="#" class="active">Home</a></li> 
+      <li><a href="#books">Books</a></li> 
+      <li><a href="#blog">Blog</a></li> 
+      <li><a href="#about">About Us</a></li> 
+      <li><a href="#support">Support</a></li> 
+    </ul>
+    
+  </nav>
+
+
+
+  <script>
+var slideIndex = 1;
+showDivs(slideIndex);
+
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
+
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length}
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";  
+  }
+  x[slideIndex-1].style.display = "block";  
+}
+</script>
+
+
+<!-- partial:index.partial.html -->
+<div class="container">
+<h1>#1 Date Picker </h1>
+ 
+<form>
+Date:
+<input id="datepicker">
+
+</form>
+</div>
+<!-- partial -->
+<!-- partial:index.partial.html -->
+<h1>DropzoneJS File Upload</h1>
+<SECTION>
+  <DIV id="dropzone">
+    <FORM class="dropzone needsclick" id="demo-upload" action="/upload">
+  
+      <DIV class="dz-message needsclick">    
+        Drop files here or click to upload.<BR>
+        <SPAN class="note needsclick">(This is just a demo dropzone. Selected 
+        files are <STRONG>not</STRONG> actually uploaded.)</SPAN>
+      </DIV>
+    </FORM>
+  </DIV>
+</SECTION>
+<h1>Task2</h1>
+<br>
+<!-- hr size="3" noshade color="#F00000" --->
+
+ 
+<DIV id="preview-template" style="display: none;">
+<DIV class="dz-preview dz-file-preview">
+<DIV class="dz-image"><IMG data-dz-thumbnail=""></DIV>
+<DIV class="dz-details">
+<DIV class="dz-size"><SPAN data-dz-size=""></SPAN></DIV>
+<DIV class="dz-filename"><SPAN data-dz-name=""></SPAN></DIV></DIV>
+<DIV class="dz-progress"><SPAN class="dz-upload" 
+data-dz-uploadprogress=""></SPAN></DIV>
+<DIV class="dz-error-message"><SPAN data-dz-errormessage=""></SPAN></DIV>
+<div class="dz-success-mark">
+  <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <title>Check</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <path d="M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" id="Oval-2" stroke-opacity="0.198794158" stroke="#747474" fill-opacity="0.816519475" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+    </g>
+  </svg>
+</div>
+<div class="dz-error-mark">
+  <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+      <title>error</title>
+      <desc>Created with Sketch.</desc>
+      <defs></defs>
+      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+          <g id="Check-+-Oval-2" sketch:type="MSLayerGroup" stroke="#747474" stroke-opacity="0.198794158" fill="#FFFFFF" fill-opacity="0.816519475">
+              <path d="M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" id="Oval-2" sketch:type="MSShapeGroup"></path>
+          </g>
+      </g>
+  </svg>
+</div>
+<h1>Task2</h1>
+<!-- partial -->
+
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.6/dist/jquery.fancybox.min.js'></script>
+
+<div class="editor">
+  <div class="toolbar">
+    <div class="line">
+      
+      <div class="box">
+        <span class="btn icon smaller" data-action="bold" title="Bold">
+          <img src="https://image.flaticon.com/icons/svg/25/25432.svg">
+        </span>
+        <span class="btn icon smaller" data-action="italic" title="Italic">
+          <img src="https://image.flaticon.com/icons/svg/25/25392.svg">
+        </span>
+        <span class="btn icon smaller" data-action="underline" title="Underline">
+          <img src="https://image.flaticon.com/icons/svg/25/25433.svg">
+        </span>
+        <span class="btn icon smaller" data-action="strikeThrough" title="Strike through">
+          <img src="https://image.flaticon.com/icons/svg/25/25626.svg">
+        </span>
+      </div>
+      
+      <div class="box">
+        <span class="btn icon has-submenu">
+          <img src="https://image.flaticon.com/icons/svg/25/25351.svg">
+          <div class="submenu">
+            <span class="btn icon" data-action="justifyLeft" title="Justify left">
+              <img src="https://image.flaticon.com/icons/svg/25/25351.svg">  
+            </span>
+            <span class="btn icon" data-action="justifyCenter" title="Justify center">
+              <img src="https://image.flaticon.com/icons/svg/25/25440.svg">  
+            </span>
+            <span class="btn icon" data-action="justifyRight" title="Justify right">
+              <img src="https://image.flaticon.com/icons/svg/25/25288.svg">  
+            </span>
+            <span class="btn icon" data-action="formatBlock" title="Justify block">
+              <img src="https://image.flaticon.com/icons/svg/25/25181.svg">  
+            </span>
+          </div>
+        </span>
+        <span class="btn icon" data-action="insertOrderedList" title="Insert ordered list">
+          <img src="https://image.flaticon.com/icons/svg/25/25242.svg">  
+        </span>
+        <span class="btn icon" data-action="insertUnorderedList" title="Insert unordered list">
+          <img src="https://image.flaticon.com/icons/svg/25/25648.svg">  
+        </span>
+        <span class="btn icon" data-action="outdent" title="Outdent">
+          <img src="https://image.flaticon.com/icons/svg/25/25410.svg">  
+        </span>
+        <span class="btn icon" data-action="indent" title="Indent">
+          <img src="https://image.flaticon.com/icons/svg/25/25233.svg">  
+        </span>
+        
+      </div>
+      <div class="box">
+        <span class="btn icon" data-action="insertHorizontalRule" title="Insert horizontal rule">
+          <img src="https://image.flaticon.com/icons/svg/25/25232.svg">  
+        </span>
+      </div>
+      
+    </div>
+    <div class="line">
+      
+      <div class="box">
+        <span class="btn icon smaller" data-action="undo" title="Undo">
+          <img src="https://image.flaticon.com/icons/svg/25/25249.svg">
+        </span>
+        <span class="btn icon" data-action="removeFormat" title="Remove format">
+          <img src="https://image.flaticon.com/icons/svg/25/25454.svg">  
+        </span>
+      </div>
+      
+      <div class="box">
+        <span class="btn icon smaller" data-action="createLink" title="Insert Link">
+          <img src="https://image.flaticon.com/icons/svg/25/25385.svg">
+        </span>
+        <span class="btn icon smaller" data-action="unlink" title="Unlink">
+          <img src="https://image.flaticon.com/icons/svg/25/25341.svg">
+        </span>
+      </div>
+      
+      <div class="box">
+        <span class="btn icon" data-action="code" title="Show HTML-Code">
+          <img src="https://image.flaticon.com/icons/svg/25/25185.svg">
+        </span>
+      </div>
+      
+    </div>
+  </div>
+  <div class="content-area">
+    <div class="visuell-view" contenteditable>
+      <p style="text-align: center;">Welcome to my <b>WYSIWYG</b> Editor <i>(What you see is what you get)</i>!</p>
+      <p style="text-align: center;">It's only made of <u>HTML5</u>, <i><u>CSS3</u> </i>and pure <u>JavaScript</u>, <strike>no framework</strike>!</p>
+      <hr>
+      <p style="text-align: center;"><b>See for yourself! 😃</b></p>
+      <p style="text-align: center;"><b>Tutorial available <a href="https://webdeasy.de/en/program-your-own-wysiwyg-editor-in-10-minutes/?referer=cp-YoVmBx">here</a>! 😋</b></p>
+    </div>
+    <textarea class="html-view"></textarea>
+  </div>
+</div>
+
+<div class="modal">
+  <div class="modal-bg"></div>
+  <div class="modal-wrapper">
+    <div class="modal-content" id="modalCreateLink">
+      <h3>Insert Link</h3>
+      <input type="text" id="linkValue" placeholder="Link (example: https://webdeasy.de/)">
+      <div class="row">
+        <input type="checkbox" id="new-tab">
+        <label for="new-tab">Open in new Tab?</label>
+      </div>
+      <button class="done">Done</button>
+    </div>
+  </div>
+</div>
+
+
+<footer>
+  <p>coded with ❤️ by <a href="https://webdeasy.de/?referer=cp-YoVmBx" target="_blank">WebDEasy</a></p>
+  <p>Icons made by <a href="https://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a> from <a href="https://www.flaticon.com/"                 title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/"                 title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
+</footer>
+<!-- partial -->
+  <script  >
+    const editor = document.getElementsByClassName('editor')[0];
+const toolbar = editor.getElementsByClassName('toolbar')[0];
+const buttons = toolbar.querySelectorAll('.btn:not(.has-submenu)');
+
+for(let i = 0; i < buttons.length; i++) {
+  let button = buttons[i];
+  
+  button.addEventListener('click', function(e) {
+    let action = this.dataset.action;
+    
+    switch(action) {
+      case 'code':
+        execCodeAction(this, editor);
+        break;
+      case 'createLink':
+        execLinkAction();
+        break;
+      default:
+        execDefaultAction(action);
+    }
+    
+  });
+}
+
+function execCodeAction(button, editor) {
+  const contentArea = editor.getElementsByClassName('content-area')[0];
+  const visuellView = contentArea.getElementsByClassName('visuell-view')[0];
+  const htmlView = contentArea.getElementsByClassName('html-view')[0];
+
+  if(button.classList.contains('active')) { // show visuell view
+    visuellView.innerHTML = htmlView.value;
+    htmlView.style.display = 'none';
+    visuellView.style.display = 'block';
+
+    button.classList.remove('active');     
+  } else {  // show html view
+    htmlView.innerText = visuellView.innerHTML;
+    visuellView.style.display = 'none';
+    htmlView.style.display = 'block';
+
+    button.classList.add('active'); 
+  }
+}
+
+function execLinkAction() {
+  let linkValue = prompt('Link (e.g. https://webdeasy.de/)');
+  document.execCommand('createLink', false, linkValue);
+}
+
+function execDefaultAction(action) {
+  document.execCommand(action, false);
+}
+  </script>
+
+  <div class="slideshow">
+  <img src="https://images.unsplash.com/photo-1480796927426-f609979314bd?w=500&q=50"/>
+  <img src="https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=500&q=50"/>
+  <img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=500&q=50"/>
+  <img src="https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?w=500&q=50"/>
+  <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=500&q=50"/>
+  <img src="https://images.unsplash.com/photo-1542931287-023b922fa89b?w=500&q=50"/>
+</div>
+
+<footer>
+  Don't want auto-scrolling? Try with mouse/touch gestures here:<br/>
+  <a href="https://codepen.io/knekk/pen/abNvMoy" target="_top">Parallax slideshow (inifinite scrolling)</a>
+</footer>
+<!-- partial -->
+  <script  >
+    const resizeObserver = new ResizeObserver(entries => {
+  for (const { target } of entries) {
+    if (target) refreshPerspective(target);
+  }
+});
+
+function initSlideshow(slideshow) {
+  // Fade in
+  slideshow.classList.add("in");
+  
+  // Observe for changes to slideshow's dimensions
+  resizeObserver.observe(slideshow);
+
+  // Auto scroll slideshow
+  setInterval(() => {
+    const firstImage = [...slideshow.children].reduce((prev, current) => (Number(prev.style.order) < Number(current.style.order)) ? prev : current);
+    
+    // Move the first image back in queue when it's out of view
+    if (firstImage.width < slideshow.scrollLeft) {
+      slideshow.scrollLeft = slideshow.scrollLeft - firstImage.width;
+      firstImage.style.order = slideshow.children.length;
+      for (const image of [...slideshow.children]) {
+        if (image != firstImage) image.style.order = image.style.order-1;
+      }
+    } else {
+      slideshow.scrollLeft += 1;
+    }    
+  }, 20);
+}
+
+function refreshPerspective(slideshow) {
+  const perspective = slideshow.getBoundingClientRect().width / 2;
+  slideshow.style.perspective = `${perspective}px`;
+
+  // Translate each image accordingly
+  {
+    let perspectiveThreshold = perspective / 4;
+    let prevZ = -1;
+    for (const [i, image] of [...slideshow.children].entries()) {
+      image.dataset.y = image.dataset.y || Math.random();
+      image.dataset.z = image.dataset.z || Math.random();
+
+      let [y, z] = [
+        Math.floor(image.dataset.y * perspectiveThreshold) - (perspectiveThreshold / 2), 
+        Math.floor(image.dataset.z * perspectiveThreshold)
+      ];
+
+      // Readjust z-translation if it's to close.
+      while (perspective > 100 && Math.abs(prevZ - z) < (perspectiveThreshold * 0.2)) {
+        image.dataset.z = Math.random();
+        z = Math.floor(image.dataset.z * perspectiveThreshold);
+      }
+
+      prevZ = z;
+      image.style.cssText = `
+        order: ${i};
+        transform: translate3d(0, ${y}px, ${z}px);
+        z-index: ${z};
+      `;
+    }
+  }
+
+  slideshow.scrollLeft = 0;
+  return perspective;
+}
+
+(async () => {
+  // Using a for..of loop in case you want more slideshows on page.
+  for (const slideshow of [...document.querySelectorAll(".slideshow")]) {
+    // Wait for all images to load before initializing the slideshow
+    for (const image of [...slideshow.children]) {
+      await new Promise(resolve => {
+        if (image.complete) resolve();
+        else image.onload = resolve;
+      });
+    }
+    
+    // Let's go
+    initSlideshow(slideshow);
+  }
+})();
+  </script>
+
+
+
+
+</body>
+</html>
